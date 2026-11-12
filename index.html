@@ -1,0 +1,401 @@
+<title>Robin Malik Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a ledger. Hero is a live three-way match table (bank / GL / switch); sections read as ruled ledger entries with mono reference labels. */
+:root {
+  --bg: #f2f5f7;
+  --surface: #ffffff;
+  --fg: #10161d;
+  --muted: #55616d;
+  --rule: #d5dde4;
+  --accent: #0b6b5b;
+  --accent-soft: #dcf0ea;
+  --warn: #9a5b00;
+  --warn-soft: #fbecd0;
+  --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1217; --surface: #151c23; --fg: #e8edf1; --muted: #9aa7b3; --rule: #27313b;
+    --accent: #4fd1b0; --accent-soft: #123830; --warn: #f0b95a; --warn-soft: #3a2b10;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1217; --surface: #151c23; --fg: #e8edf1; --muted: #9aa7b3; --rule: #27313b;
+  --accent: #4fd1b0; --accent-soft: #123830; --warn: #f0b95a; --warn-soft: #3a2b10;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 400 16px/1.6 var(--body);
+  padding-block: 0 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1080px; margin: 0 auto; }
+.mono { font-family: var(--mono); }
+.label { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* nav */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; flex-wrap: wrap; }
+.brand { font: 800 20px/1 var(--display); letter-spacing: -.02em; text-decoration: none; }
+.brand span { color: var(--accent); }
+.nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.nav-links a { font: 500 14px/1 var(--body); color: var(--muted); text-decoration: none; padding-block: 6px; }
+.nav-links a:hover { color: var(--fg); }
+.theme { font: 500 12px/1 var(--mono); background: transparent; color: var(--fg); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+.theme:hover { border-color: var(--accent); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: center; padding-block: 40px 56px; }
+.status { display: inline-flex; align-items: center; gap: 8px; font: 500 13px/1 var(--mono); color: var(--accent); background: var(--accent-soft); padding: 8px 12px; border-radius: 999px; }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: block; }
+h1 { font: 800 clamp(36px, 6vw, 60px)/1.02 var(--display); letter-spacing: -.035em; margin: 20px 0 18px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--accent); }
+.lede { font-size: 18px; color: var(--muted); max-width: 52ch; margin: 0 0 28px; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { font: 600 15px/1 var(--body); text-decoration: none; padding: 14px 20px; border-radius: 8px; border: 1px solid var(--fg); display: inline-block; cursor: pointer; }
+.btn.primary { background: var(--fg); color: var(--bg); }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--rule); }
+.btn:hover { border-color: var(--accent); }
+
+/* ledger widget */
+.ledger { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+.ledger-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.replay { font: 500 12px/1 var(--mono); background: var(--accent-soft); color: var(--accent); border: 0; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font: 400 13px/1.3 var(--mono); font-variant-numeric: tabular-nums; min-width: 520px; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
+td { padding: 11px 16px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; }
+td.off { color: var(--warn); font-weight: 500; }
+.chip { display: inline-block; font: 500 11px/1 var(--mono); padding: 5px 8px; border-radius: 4px; letter-spacing: .04em; }
+.chip.ok { background: var(--accent-soft); color: var(--accent); }
+.chip.ex { background: var(--warn-soft); color: var(--warn); }
+.chip.wait { background: transparent; color: var(--muted); border: 1px dashed var(--rule); }
+.ledger-foot { padding: 10px 16px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* facts */
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 1px solid var(--rule); }
+.fact { padding: 22px 20px 22px 0; }
+.fact + .fact { padding-left: 20px; border-left: 1px solid var(--rule); }
+.fact b { display: block; font: 800 38px/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.fact span { display: block; margin-top: 8px; color: var(--muted); font-size: 14px; }
+
+/* sections */
+section { padding-block: 64px 0; }
+.sec-head { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 24px; margin-bottom: 28px; }
+h2 { font: 700 clamp(26px, 4vw, 36px)/1.1 var(--display); letter-spacing: -.025em; margin: 0; text-wrap: balance; }
+.sec-body { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 24px; }
+.sec-body > .inner { grid-column: 2; min-width: 0; }
+.intro { margin: 0 0 24px; color: var(--muted); max-width: 62ch; }
+
+.entries { display: grid; gap: 0; }
+.entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px; padding-block: 22px; border-top: 1px solid var(--rule); }
+.entry:last-child { border-bottom: 1px solid var(--rule); }
+.entry h3 { font: 700 19px/1.25 var(--display); margin: 0 0 8px; letter-spacing: -.01em; }
+.entry p { margin: 0; color: var(--muted); }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.tag { font: 400 12px/1 var(--mono); border: 1px solid var(--rule); padding: 6px 8px; border-radius: 4px; color: var(--fg); background: var(--surface); }
+.entry .ref { margin-bottom: 10px; display: block; }
+.entry ul, .role ul { margin: 0; padding-left: 18px; color: var(--muted); }
+.entry li + li, .role li + li { margin-top: 6px; }
+.metric { color: var(--fg); font-weight: 600; }
+
+/* stack */
+.stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.group { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 20px; min-width: 0; }
+.group h3 { font: 700 16px/1.2 var(--display); margin: 10px 0 14px; }
+.group .tags { margin-top: 0; }
+.group.now { border-color: var(--accent); }
+.group.now .label { color: var(--accent); }
+
+/* experience */
+.role { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px; padding-block: 22px; border-top: 1px solid var(--rule); }
+.role:last-child { border-bottom: 1px solid var(--rule); }
+.role h3 { font: 700 19px/1.25 var(--display); margin: 0 0 4px; }
+.role p { margin: 0; color: var(--muted); }
+.role .when { font: 400 13px/1.4 var(--mono); color: var(--muted); }
+
+/* contact */
+.contact { background: var(--fg); color: var(--bg); border-radius: 16px; padding: clamp(28px, 5vw, 48px); }
+.contact h2 { color: var(--bg); max-width: 18ch; }
+.contact p { color: color-mix(in srgb, var(--bg) 75%, transparent); max-width: 52ch; margin: 14px 0 24px; }
+.contact .btn { background: var(--bg); color: var(--fg); border-color: var(--bg); }
+.contact .btn.ghost { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 40%, transparent); }
+.contact .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.addr { font: 500 15px/1.2 var(--mono); user-select: all; padding: 14px 16px; border: 1px dashed color-mix(in srgb, var(--bg) 40%, transparent); border-radius: 8px; overflow-wrap: anywhere; }
+.foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 28px; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 24px 40px; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fact:nth-child(3) { padding-left: 0; border-left: 0; }
+  .fact:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .sec-head, .sec-body { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .sec-body > .inner { grid-column: 1; }
+  .entry, .role { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .row-anim { transition: background .3s; }
+  tr.flash td { background: var(--accent-soft); }
+}
+</style>
+
+<div class="wrap">
+  <header class="nav">
+    <a class="brand" href="#top">Robin Malik<span>.</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#project">Project</a>
+      <a href="#stack">Stack</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+      <button class="theme" id="theme" type="button" aria-label="Toggle light and dark theme">theme</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <span class="status"><i></i>Open to senior backend and full-stack roles</span>
+        <h1>I build the systems that make <em>the numbers agree.</em></h1>
+        <p class="lede">Senior full-stack engineer with 4+ years building high-throughput, data-intensive platforms in banking, fintech and SaaS. I own the reconciliation engine behind card-scheme operations processing 10M+ transactions a day, and I lead the team that ships it.</p>
+        <div class="cta">
+          <a class="btn primary" href="#work">See what I built</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+
+      <div class="ledger" aria-label="Sample three-way reconciliation">
+        <div class="ledger-head">
+          <span class="label">Three-way match / sample</span>
+          <button class="replay" id="replay" type="button">Replay match</button>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Ref</th><th class="num">Bank</th><th class="num">GL</th><th class="num">Switch</th><th>Status</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div class="ledger-foot">
+          <span class="label">3 matched · 2 exceptions</span>
+          <span class="label">Example data</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><b>10M+</b><span>transactions a day through the reconciliation engine</span></div>
+      <div class="fact"><b>85%</b><span>lower API latency at peak load after query tuning</span></div>
+      <div class="fact"><b>60%</b><span>faster exception resolution with new dashboards</span></div>
+      <div class="fact"><b>4</b><span>backend engineers led as feature owner</span></div>
+    </div>
+
+    <section id="work">
+      <div class="sec-head"><span class="label">Selected work</span><h2>Reconsyde: reconciliation and exception management for banks and card schemes</h2></div>
+      <div class="sec-body"><div class="inner">
+        <p class="intro">Reconsyde matches transactions across banks, ledgers and payment switches, and runs on-prem for each client. I take requirements from clients and leadership, propose the architecture, plan the ETL and assign the work. About 70% of the product's features are mine.</p>
+        <div class="entries">
+          <article class="entry">
+            <div><span class="label ref">Core</span><h3>Reconciliation engine</h3></div>
+            <div><p>A Django and DRF data platform processing <span class="metric">10M+ transactions a day</span>, targeting a <span class="metric">97.5% auto-match rate</span>. Reconciliation runs with rollback, plus bank-GL and three-way dashboards. I own it from schema design to release.</p>
+              <div class="tags"><span class="tag">Python</span><span class="tag">Django</span><span class="tag">DRF</span><span class="tag">PostgreSQL</span></div></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Ingestion</span><h3>ETL from 8 upstream sources</h3></div>
+            <div><p>An ETL pipeline that ingests, transforms and loads feeds from eight upstream sources. Pydantic-driven schema validation cut ingestion failures. Kafka handles streaming sources.</p>
+              <div class="tags"><span class="tag">ETL</span><span class="tag">Pydantic v2</span><span class="tag">Kafka</span></div></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Scale</span><h3>Async processing that recovers</h3></div>
+            <div><p>Celery and Redis infrastructure running <span class="metric">24 concurrent workers</span> with exponential backoff and idempotent retries. Rollback, retry and dead-letter handling keep high-volume financial workflows atomic and recoverable.</p>
+              <div class="tags"><span class="tag">Celery</span><span class="tag">Redis</span><span class="tag">Locust</span><span class="tag">Prometheus</span><span class="tag">Grafana</span></div></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Performance</span><h3>API latency down 85%</h3></div>
+            <div><p>Read query plans, added indexes and Redis caching, and removed N+1 queries across DRF APIs, cutting latency by <span class="metric">85% at peak load</span>.</p>
+              <div class="tags"><span class="tag">PostgreSQL tuning</span><span class="tag">Indexing</span><span class="tag">Caching</span></div></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Operations</span><h3>Exception management</h3></div>
+            <div><p>An exception system with audit tracking, remark-driven resolution flows and maker-checker approval, used daily by <span class="metric">35 operations users</span>. Angular dashboards give live views of match rates, exceptions and backlog and cut resolution time by <span class="metric">60%</span>.</p>
+              <div class="tags"><span class="tag">Angular</span><span class="tag">RxJS</span><span class="tag">Audit trail</span><span class="tag">Maker-checker</span></div></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Security</span><h3>Access control</h3></div>
+            <div><p>JWT authentication with module-level and action-level RBAC across every protected API, plus SAML single sign-on for enterprise clients.</p>
+              <div class="tags"><span class="tag">JWT</span><span class="tag">RBAC</span><span class="tag">SAML</span></div></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Modules</span><h3>Automation, licensing and image analysis</h3></div>
+            <div><ul><li>NPCI RuPay email workflows: SPOC notifications for incentive payout, co-brand invoice, cashback, fees and lounge utilization.</li><li>License management and an escalation matrix for routing unresolved items.</li><li>Image analysis that reads vehicle number plates from uploaded toll-booth images.</li></ul></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Leadership</span><h3>Feature owner and team lead</h3></div>
+            <div><ul><li>Plan and assign work for four backend engineers.</li><li>Review code and lead release delivery.</li><li>Turn each client's process into a plan the team builds on Reconsyde.</li></ul></div>
+          </article>
+        </div>
+      </div></div>
+    </section>
+
+    <section id="project">
+      <div class="sec-head"><span class="label">Personal project / 2026</span><h2>AI-powered reconciliation platform</h2></div>
+      <div class="sec-body"><div class="inner">
+        <p class="intro">The same domain, rebuilt to learn what LLMs add to reconciliation. I am building it twice, as a Django monolith and as FastAPI microservices, to compare the architecture trade-offs.</p>
+        <div class="entries">
+          <article class="entry">
+            <div><span class="label ref">Ingestion</span><h3>Adapter and Factory layers</h3></div>
+            <div><p>A multi-source ingestion layer built with Adapter and Factory patterns. A fixed-width bank GL adapter is validated end to end against a 20,000+ row production-style ledger export, normalized into a Pydantic-validated canonical contract.</p></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">Matching</span><h3>Event-driven Kafka pipeline</h3></div>
+            <div><p>An event-driven pipeline with a Strategy-pattern match engine covering exact, fuzzy and embedding-based matching.</p>
+              <div class="tags"><span class="tag">Kafka</span><span class="tag">Strategy pattern</span><span class="tag">Embeddings</span></div></div>
+          </article>
+          <article class="entry">
+            <div><span class="label ref">AI</span><h3>RAG and a tool-calling agent</h3></div>
+            <div><p>RAG with chunking, embeddings and pgvector retrieval, plus a hand-rolled ReAct tool-calling agent that investigates unmatched transactions with human-in-the-loop review. The full stack is containerized with Docker Compose.</p>
+              <div class="tags"><span class="tag">RAG</span><span class="tag">pgvector</span><span class="tag">ReAct agent</span><span class="tag">Docker Compose</span><span class="tag">FastAPI</span></div></div>
+          </article>
+        </div>
+      </div></div>
+    </section>
+
+    <section id="stack">
+      <div class="sec-head"><span class="label">Stack</span><h2>What I work with</h2></div>
+      <div class="stack">
+        <div class="group"><span class="label">Languages</span><h3>Core languages</h3>
+          <div class="tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">TypeScript</span><span class="tag">JavaScript</span></div></div>
+        <div class="group"><span class="label">Backend</span><h3>Services and APIs</h3>
+          <div class="tags"><span class="tag">Django</span><span class="tag">DRF</span><span class="tag">FastAPI</span><span class="tag">Pydantic v2</span><span class="tag">Celery</span><span class="tag">Microservices</span><span class="tag">OpenAPI</span></div></div>
+        <div class="group"><span class="label">Data and messaging</span><h3>Moving data reliably</h3>
+          <div class="tags"><span class="tag">PostgreSQL</span><span class="tag">pgvector</span><span class="tag">Redis</span><span class="tag">Kafka</span><span class="tag">ETL pipelines</span></div></div>
+        <div class="group"><span class="label">Frontend</span><h3>Interfaces</h3>
+          <div class="tags"><span class="tag">Angular</span><span class="tag">RxJS</span><span class="tag">React</span><span class="tag">React Query</span></div></div>
+        <div class="group"><span class="label">Cloud and DevOps</span><h3>Ship and observe</h3>
+          <div class="tags"><span class="tag">AWS EC2</span><span class="tag">S3</span><span class="tag">RDS</span><span class="tag">Lambda</span><span class="tag">API Gateway</span><span class="tag">Docker</span><span class="tag">Nginx</span><span class="tag">GitHub Actions</span><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">Locust</span></div></div>
+        <div class="group"><span class="label">Security</span><h3>Identity and access</h3>
+          <div class="tags"><span class="tag">JWT</span><span class="tag">RBAC</span><span class="tag">SSO (Azure AD)</span><span class="tag">SAML</span></div></div>
+        <div class="group now"><span class="label">AI</span><h3>LLM applications</h3>
+          <div class="tags"><span class="tag">RAG</span><span class="tag">Embeddings</span><span class="tag">Agentic tool-calling (ReAct)</span><span class="tag">Anthropic API</span></div></div>
+        <div class="group"><span class="label">Engineering</span><h3>Design discipline</h3>
+          <div class="tags"><span class="tag">OOP</span><span class="tag">SOLID</span><span class="tag">Adapter</span><span class="tag">Factory</span><span class="tag">Strategy</span><span class="tag">pytest</span></div></div>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="sec-head"><span class="label">Experience</span><h2>Where I have worked</h2></div>
+      <div>
+        <div class="role">
+          <div><h3>Senior Full Stack Software Engineer</h3><p class="mono" style="font-size:13px">Bancapp Automation</p><span class="when">Aug 2024 – Present</span></div>
+          <div><p style="margin-bottom:10px">Reconsyde, a reconciliation and exception-management platform for banking and card-scheme operations. Feature owner for the reconciliation engine and audit trail, product team lead, and lead of a four-engineer backend team. Details are under Selected work above.</p></div>
+        </div>
+        <div class="role">
+          <div><h3>Full Stack Engineer</h3><p class="mono" style="font-size:13px">Alcor Solutions</p><span class="when">May 2022 – Jul 2024</span></div>
+          <div><ul>
+            <li>Built Django REST APIs, validation layers and business logic for High5, a multi-tenant SaaS employee-recognition platform serving <span class="metric">1,200+ enterprise customers</span>, with tenant-aware data isolation.</li>
+            <li>Integrated third-party voucher APIs to automate issuance and redemption, cutting processing time by about <span class="metric">35%</span> (12s to 7.8s).</li>
+            <li>Implemented Azure Active Directory SSO so enterprise customers onboard themselves in a day.</li>
+            <li>Added React Query caching patterns that sped up the dashboard and reduced repeat API calls.</li>
+            <li>Delivered a production Angular client portal for Volkswagen (VFJ) with reusable components, validation and role-aware routing.</li>
+          </ul></div>
+        </div>
+        <div class="role">
+          <div><h3>B.Tech</h3><p class="mono" style="font-size:13px">Dr. A.P.J. Abdul Kalam Technical University</p><span class="when">2022</span></div>
+          <div><p>Certifications: Python 3 Programming Specialization (Coursera), Angular: The Complete Guide (Udemy), Web Development (Udemy).</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <span class="label" style="color:inherit;opacity:.7">Contact</span>
+        <h2 style="margin-top:12px">Hiring for a backend or full-stack lead?</h2>
+        <p>I am based in Delhi NCR, India. If you have a system where the numbers have to agree, I would like to hear about it.</p>
+        <div class="row" id="contact-row"></div>
+      </div>
+      <div class="foot"><span class="label">Robin Malik</span><span class="label">Delhi NCR, India</span></div>
+    </section>
+  </main>
+</div>
+
+<script>
+var CONFIG = {
+  email: "robinmalik1208@gmail.com",
+  linkedin: "https://www.linkedin.com/in/robinmalik-devel",
+  github: "https://github.com/robinmalik-devel"
+};
+
+var DATA = [
+  { ref: "TXN-48213", bank: "12,450.00", gl: "12,450.00", sw: "12,450.00", ok: true },
+  { ref: "TXN-48214", bank: "3,200.00",  gl: "3,200.00",  sw: "3,200.00",  ok: true },
+  { ref: "TXN-48215", bank: "8,975.50",  gl: "8,975.50",  sw: "missing",   ok: false, note: "No switch record", off: "sw" },
+  { ref: "TXN-48216", bank: "540.00",    gl: "540.00",    sw: "540.00",    ok: true },
+  { ref: "TXN-48217", bank: "21,000.00", gl: "20,100.00", sw: "21,000.00", ok: false, note: "GL amount differs", off: "gl" }
+];
+var rows = document.getElementById("rows");
+function chip(r, done) {
+  if (!done) return '<span class="chip wait">PENDING</span>';
+  return r.ok ? '<span class="chip ok">MATCHED</span>' : '<span class="chip ex" title="' + r.note + '">EXCEPTION</span>';
+}
+function render(done) {
+  rows.innerHTML = DATA.map(function (r, i) {
+    return '<tr class="row-anim" id="r' + i + '"><td>' + r.ref +
+      '</td><td class="num">' + r.bank +
+      '</td><td class="num' + (r.off === "gl" && done[i] ? " off" : "") + '">' + r.gl +
+      '</td><td class="num' + (r.off === "sw" && done[i] ? " off" : "") + '">' + r.sw +
+      '</td><td>' + chip(r, done[i]) + '</td></tr>';
+  }).join("");
+}
+render(DATA.map(function () { return true; }));
+
+var timer = null;
+document.getElementById("replay").addEventListener("click", function () {
+  if (timer) clearInterval(timer);
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) { render(DATA.map(function () { return true; })); return; }
+  var done = DATA.map(function () { return false; });
+  render(done);
+  var i = 0;
+  timer = setInterval(function () {
+    if (i >= DATA.length) { clearInterval(timer); timer = null; return; }
+    done[i] = true; render(done);
+    var tr = document.getElementById("r" + i);
+    if (tr) { tr.classList.add("flash"); setTimeout(function (t) { return function () { t.classList.remove("flash"); }; }(tr), 400); }
+    i++;
+  }, 420);
+});
+
+var root = document.documentElement;
+document.getElementById("theme").addEventListener("click", function () {
+  var cur = root.getAttribute("data-theme");
+  if (!cur) cur = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  root.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+});
+
+(function () {
+  var row = document.getElementById("contact-row");
+  var html = "";
+  if (CONFIG.email) html += '<span class="addr">' + CONFIG.email + '</span><button class="btn" id="copy" type="button">Copy email</button>';
+  if (CONFIG.linkedin) html += '<a class="btn ghost" href="' + CONFIG.linkedin + '">LinkedIn</a>';
+  if (CONFIG.github) html += '<a class="btn ghost" href="' + CONFIG.github + '">GitHub</a>';
+  row.innerHTML = html;
+  var c = document.getElementById("copy");
+  if (c) c.addEventListener("click", function () {
+    try { navigator.clipboard.writeText(CONFIG.email).then(function () { c.textContent = "Copied"; }, function () { c.textContent = "Select and copy above"; }); }
+    catch (e) { c.textContent = "Select and copy above"; }
+  });
+})();
+</script>
